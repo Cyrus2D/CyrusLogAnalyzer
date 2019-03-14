@@ -1,4 +1,4 @@
-from LogExtractor.Game import Game
+from BaseCode.Game import Game
 import matplotlib.pyplot as plt
 import sys
 import os

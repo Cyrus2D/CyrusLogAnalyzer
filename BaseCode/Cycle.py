@@ -1,5 +1,5 @@
-from LogExtractor.Player import Player
-from LogExtractor.Ball import Ball
+from BaseCode.Player import Player
+from BaseCode.Ball import Ball
 import enum
 
 

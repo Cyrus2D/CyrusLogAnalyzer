@@ -1,4 +1,4 @@
-from LogExtractor.Math import Vector2D
+from BaseCode.Math import Vector2D
 
 
 class Ball:

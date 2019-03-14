@@ -1,5 +1,5 @@
-from LogExtractor.Cycle import Cycle
-from LogExtractor.Cycle import GameMode
+from BaseCode.Cycle import Cycle
+from BaseCode.Cycle import GameMode
 
 
 class Game:

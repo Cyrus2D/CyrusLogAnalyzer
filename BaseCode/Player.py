@@ -1,6 +1,5 @@
-from LogExtractor.Math import Vector2D
-from LogExtractor.Math import Angle
-import enum
+from BaseCode.Math import Vector2D
+from BaseCode.Math import Angle
 
 
 class Player:

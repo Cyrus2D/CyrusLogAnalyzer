@@ -1,4 +1,4 @@
-from LogExtractor.Game import Game
+from BaseCode.Game import Game
 import os
 import sys
 
