@@ -47,7 +47,7 @@ def main(path):
 
 
 if __name__ == "__main__":
-    path = './cclog'
+    path = '../Data'
     if len(sys.argv) > 1:
         path = sys.argv[1]
     main(path)

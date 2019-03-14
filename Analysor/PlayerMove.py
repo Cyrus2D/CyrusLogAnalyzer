@@ -5,6 +5,11 @@ import os
 
 
 def main(path, player):
+    """
+    Showing player move point by plot
+    :param path: path of rcg files
+    :param player: number of player [-11, -1] for left team and [1, 11] for right team
+    """
     p_pos = []
     for f in os.listdir(path):
         g = Game.read_log(os.path.join(path, f))
@@ -18,7 +23,7 @@ def main(path, player):
 
 
 if __name__ == "__main__":
-    path = './cclog'
+    path = '../Data'
     player = -9
     if len(sys.argv) > 1:
         path = sys.argv[1]
