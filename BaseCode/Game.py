@@ -29,14 +29,23 @@ class Game:
                 tmp = l.rstrip('\n').strip(')').split(' ')
                 res.left_team = tmp[2]
                 res.right_team = tmp[3]
-                res.left_score = int(tmp[4])
-                res.right_score = int(tmp[5])
+                right_score_changed = False
+                if res.left_score != int(tmp[4]):
+                    res.left_score = int(tmp[4])
+                elif res.right_score != int(tmp[5]):
+                    res.right_score = int(tmp[5])
+                    right_score_changed = True
+                if res.left_score > 0 or res.right_score > 0:
+                    if right_score_changed:
+                        res.cycles[-1].is_before_goal = 'r'
+                    else:
+                        res.cycles[-1].is_before_goal = 'l'
             i += 1
             # if i > 5000:
             #     break
 
         for c in res.cycles:
-            c.post_process()
+            c.update_nearest_to_ball()
 
         for i in range(1, len(res.cycles)):
             res.cycles[i].update_kicker(res.cycles[i - 1])

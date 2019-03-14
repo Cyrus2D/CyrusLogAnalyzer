@@ -20,6 +20,7 @@ class Cycle:
         self.kicker_team = 'n'
         self.next_kicker_player = []
         self.next_kicker_team = 'n'
+        self.is_before_goal = 'n'
 
     @staticmethod
     def parse(_string, mode):
@@ -43,7 +44,7 @@ class Cycle:
                 res.players[p.unum] = p
         return res
 
-    def post_process(self):
+    def update_nearest_to_ball(self):
         self.nearest_player_dist = 1000
         for p in self.players:
             player_dist = self.players[p].pos.dist(self.ball.pos)
