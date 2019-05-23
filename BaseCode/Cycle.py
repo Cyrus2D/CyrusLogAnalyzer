@@ -45,6 +45,9 @@ class Cycle:
         return res
 
     def update_nearest_to_ball(self):
+        """
+        update nearest player to ball
+        """
         self.nearest_player_dist = 1000
         for p in self.players:
             player_dist = self.players[p].pos.dist(self.ball.pos)
@@ -53,6 +56,10 @@ class Cycle:
                 self.nearest_player = p
 
     def update_kicker(self, pre_cycle):
+        """
+        update kickers player with prev cycle, because player can kickable bot maybe didn't kick ball
+        :param pre_cycle: prev cycle object
+        """
         for p in self.players:
             player_dist = self.players[p].pos.dist(self.ball.pos)
             if player_dist < 1.2:
