@@ -22,7 +22,7 @@ def main(path, out_path=None, thread_number=2):
         #     break
         file = os.path.join(path, f)
         files.append(file)
-    result_list = process_pool.map(analyze_games, files[:10])
+    result_list = process_pool.map(analyze_games, files)
     game_number = float(len(result_list))
     result_keys = result_list[0].keys()
     results = {}
