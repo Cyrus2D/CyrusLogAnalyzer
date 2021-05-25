@@ -1,10 +1,11 @@
 from BaseCode.Cycle import Cycle
 from BaseCode.Cycle import GameMode
+from typing import List
 
 
 class Game:
     def __init__(self):
-        self.cycles = []
+        self.cycles: List[Cycle] = []
         self.left_team = ''
         self.right_team = ''
         self.left_score = 0
@@ -84,13 +85,32 @@ class Game:
         self.right_possession = 0
         self.left_possession_percent = 0
         self.right_possession_percent = 0
+        self.left_team_with_ball = [0, 0, 0, 0]
+        self.right_team_with_ball = [0, 0, 0, 0]
 
         for c in self.cycles:
             if c.game_mode == GameMode.play_on:
+                ball_pos = c.ball.pos
                 if c.next_kicker_team == 'l':
+                    if ball_pos.x < -52.5 + 105.0 / 4.0:
+                        self.left_team_with_ball[0] += 1
+                    elif ball_pos.x > 52.5 - 105.0 / 4.0:
+                        self.left_team_with_ball[3] += 1
+                    elif ball_pos.x < 0:
+                        self.left_team_with_ball[1] += 1
+                    else:
+                        self.left_team_with_ball[2] += 1
                     self.left_possession += 1
                 elif c.next_kicker_team == 'r':
                     self.right_possession += 1
+                    if ball_pos.x > 52.5 - 105.0 / 4.0:
+                        self.right_team_with_ball[0] += 1
+                    elif ball_pos.x < -52.5 + 105.0 / 4.0:
+                        self.right_team_with_ball[3] += 1
+                    elif ball_pos.x > 0:
+                        self.right_team_with_ball[1] += 1
+                    else:
+                        self.right_team_with_ball[2] += 1
                 if c.kicker_team != 'n' and c.kicker_player != [] and c.next_kicker_player != c.kicker_player:
                     if c.kicker_team == 'l':
                         self.left_pass_number += 1
@@ -101,6 +121,8 @@ class Game:
                         if c.kicker_team == c.next_kicker_team:
                             self.right_true_pass_number += 1
 
+        self.left_team_with_ball = [c / self.left_possession for c in self.left_team_with_ball]
+        self.right_team_with_ball = [c / self.right_possession for c in self.right_team_with_ball]
         self.left_possession_percent = self.left_possession / (self.left_possession + self.right_possession) * 100
         self.right_possession_percent = 100 - self.left_possession
 

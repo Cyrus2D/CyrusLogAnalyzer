@@ -6,7 +6,13 @@ import sys
 
 def main(path, side):
     goals_sequence = []
+    number = 0
     for file_name in os.listdir(path):
+        if not file_name.endswith('.rcg'):
+            continue
+        number += 1
+        # if number > 10:
+        #     break
         file_path = os.path.join(path, file_name)
         g = Game.read_log(file_path)
         for ic in range(len(g.cycles) - 1, 0, -1):
