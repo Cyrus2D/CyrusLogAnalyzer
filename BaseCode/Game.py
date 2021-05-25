@@ -137,8 +137,8 @@ class Game:
         res['right_pass_number'] = self.right_pass_number
         res['left_true_pass_number'] = self.left_true_pass_number
         res['right_true_pass_number'] = self.right_true_pass_number
-        res['left_possession_number'] = self.left_possession
-        res['right_possession_number'] = self.right_possession
+        res['left_possession'] = self.left_possession / (self.left_possession + self.right_possession) * 100.0
+        res['right_possession'] = self.right_possession / (self.left_possession + self.right_possession) * 100.0
         res['left_score'] = self.left_score
         res['right_score'] = self.right_score
         res['left_team_with_ball'] = self.left_team_with_ball

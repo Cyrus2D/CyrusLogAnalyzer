@@ -48,10 +48,6 @@ def main(path, out_path=None, thread_number=2):
             results['left_win'] + results['right_win'])
     results['left_true_pass_number'] = results['left_true_pass_number'] / results['left_pass_number']
     results['right_true_pass_number'] = results['right_true_pass_number'] / results['right_pass_number']
-    results['left_possession_number'] = results['left_possession_number'] / (
-                results['left_possession_number'] + results['right_possession_number']) * 100.0
-    results['right_possession_number'] = results['right_possession_number'] / (
-                results['left_possession_number'] + results['right_possession_number']) * 100.0
     if out_path:
         out_file = open(out_path, 'w')
     for key in results.keys():
