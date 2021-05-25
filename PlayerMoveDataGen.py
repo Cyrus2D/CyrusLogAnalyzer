@@ -1,8 +1,7 @@
 from BaseCode.Game import Game
-import matplotlib.pyplot as plt
 import sys
 import os
-from BaseCode.Cycle import GameMode
+from BaseCode import GameMode
 
 
 def make_X(cycle, player_unum):
@@ -53,7 +52,7 @@ def main(path, player, offense):
 
 
 if __name__ == "__main__":
-    path = '../Data'
+    path = 'Data'
     player = -9
     if len(sys.argv) > 1:
         path = sys.argv[1]

@@ -131,4 +131,21 @@ class Game:
         print('Pass Number:', 'left:', self.left_pass_number, 'right:', self.right_pass_number)
         print('True Pass:', 'left:', self.left_true_pass_number / (self.left_pass_number + 1) * 100, 'right:', self.right_true_pass_number / (self.right_pass_number + 1) * 100)
 
-
+    def get_dictionary(self):
+        res = dict()
+        res['left_pass_number'] = self.left_pass_number
+        res['right_pass_number'] = self.right_pass_number
+        res['left_true_pass_number'] = self.left_true_pass_number
+        res['right_true_pass_number'] = self.right_true_pass_number
+        res['left_possession_number'] = self.left_possession
+        res['right_possession_number'] = self.right_possession
+        res['left_score'] = self.left_score
+        res['right_score'] = self.right_score
+        res['left_team_with_ball'] = self.left_team_with_ball
+        res['right_team_with_ball'] = self.right_team_with_ball
+        res['left_score'] = self.left_score
+        res['right_score'] = self.right_score
+        res['left_win'] = 1 if self.left_score > self.right_score else 0
+        res['right_win'] = 1 if self.left_score < self.right_score else 0
+        res['draw'] = 1 if self.left_score == self.right_score else 0
+        return res

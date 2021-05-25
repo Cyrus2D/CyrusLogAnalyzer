@@ -104,6 +104,6 @@ class Angle:
 
     @staticmethod
     def atan2_deg(y, x):
-        if x is 0.0 and y is 0.0:
+        if x == 0.0 and y == 0.0:
             return 0.0
         return math.atan2(y, x) * 180.0 / math.pi

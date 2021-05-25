@@ -1,10 +1,7 @@
 
 from BaseCode.Game import Game
-import matplotlib.pyplot as plt
 import sys
 import os
-
-from BaseCode.Math import Vector2D
 
 
 def main(path: str, player: int):
@@ -78,7 +75,7 @@ def main(path: str, player: int):
 
 
 if __name__ == "__main__":
-    path = '../Data'
+    path = 'Data'
     player = 1
     if len(sys.argv) > 1:
         path = sys.argv[1]

@@ -32,7 +32,7 @@ def main(path, side):
 
 if __name__ == '__main__':
     print('Usage: python3 DrawGoalPath RCGFilesPath r or l')
-    path = '../Data'
+    path = 'Data'
     side = ['r', 'l']
     if len(sys.argv) > 1:
         path = sys.argv[1]
