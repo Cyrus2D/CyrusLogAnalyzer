@@ -21,6 +21,7 @@ class Cycle:
         self.next_kicker_player = []
         self.next_kicker_team = 'n'
         self.is_before_goal = 'n'
+        self.next_kick_ball_pos = None
 
     @staticmethod
     def parse(_string, mode):
