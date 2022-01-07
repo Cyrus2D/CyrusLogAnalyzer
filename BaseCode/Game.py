@@ -63,13 +63,15 @@ class Game:
 
         last_team = 'n'
         last_player = []
+        last_ball_pos = None
         for ic in range(len(res.cycles) - 1, 0, -1):
             res.cycles[ic].next_kicker_player = last_player
             res.cycles[ic].next_kicker_team = last_team
+            res.cycles[ic].next_kick_ball_pos = last_ball_pos
             if len(res.cycles[ic].kicker_player) > 0:
                 last_player = res.cycles[ic].kicker_player
                 last_team = res.cycles[ic].kicker_team
-
+                last_ball_pos = res.cycles[ic].ball.pos
         return res
 
     def analyse(self):
