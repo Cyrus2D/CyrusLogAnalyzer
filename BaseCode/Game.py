@@ -24,16 +24,17 @@ class Game:
         file = open(path, 'r')
         lines = file.readlines()
         i = 0
-        mode = GameMode.set_play
+        mode = GameMode.other
+        pre_cycle = 0
+        pre_small_cycle = 0
         for l in lines:
             try:
                 if l.startswith('(show'):
-                    res.cycles.append(Cycle.parse(l, mode))
+                    res.cycles.append(Cycle.parse(l, mode, pre_cycle, pre_small_cycle))
+                    pre_cycle = res.cycles[-1].cycle
+                    pre_small_cycle = res.cycles[-1].small_cycle
                 elif l.startswith('(playmode'):
-                    if l.split(' ')[2][:-2] == 'play_on':
-                        mode = GameMode.play_on
-                    else:
-                        mode = GameMode.set_play
+                    mode = Cycle.pars_mode(l)
                 elif l.startswith('(team'):
                     tmp = l.rstrip('\n').strip(')').split(' ')
                     res.left_team = tmp[2]
@@ -49,30 +50,40 @@ class Game:
                             res.cycles[-1].is_before_goal = 'r'
                         else:
                             res.cycles[-1].is_before_goal = 'l'
-            except:
+            except Exception as e:
+                print(e)
                 continue
             i += 1
             # if i > 5000:
             #     break
         file.close()
         for c in res.cycles:
-            c.update_nearest_to_ball()
+            c.update_closest_to_ball()
 
         for i in range(1, len(res.cycles)):
-            res.cycles[i].update_kicker(res.cycles[i - 1])
+            res.cycles[i].update_kicker(res.cycles[i + 1] if i < len(res.cycles) - 1 else None)
 
+        Game.update_kickers(res)
+
+
+        # for c in res.cycles:
+        #     print(c.cycle, c.small_cycle, c.kicker_team, c.kicker_players, c.next_kicker_team, c.next_kicker_player)
+        return res
+
+    @staticmethod
+    def update_kickers(game):
         last_team = 'n'
         last_player = []
         last_ball_pos = None
-        for ic in range(len(res.cycles) - 1, 0, -1):
-            res.cycles[ic].next_kicker_player = last_player
-            res.cycles[ic].next_kicker_team = last_team
-            res.cycles[ic].next_kick_ball_pos = last_ball_pos
-            if len(res.cycles[ic].kicker_player) > 0:
-                last_player = res.cycles[ic].kicker_player
-                last_team = res.cycles[ic].kicker_team
-                last_ball_pos = res.cycles[ic].ball.pos
-        return res
+        for ic in range(len(game.cycles) - 1, 0, -1):
+            # if not (game.cycles[ic].game_mode == GameMode.play_on and game.cycles[ic + 1].game_mode != GameMode.play_on):
+            game.cycles[ic].next_kicker_player = last_player
+            game.cycles[ic].next_kicker_team = last_team
+            game.cycles[ic].next_kick_ball_pos = last_ball_pos
+            if len(game.cycles[ic].kicker_players) > 0:
+                last_player = game.cycles[ic].kicker_players
+                last_team = game.cycles[ic].kicker_team
+                last_ball_pos = game.cycles[ic].ball.pos
 
     def analyse(self):
         '''
@@ -115,7 +126,7 @@ class Game:
                         self.right_team_with_ball[1] += 1
                     else:
                         self.right_team_with_ball[2] += 1
-                if c.kicker_team != 'n' and c.kicker_player != [] and c.next_kicker_player != c.kicker_player:
+                if c.kicker_team != 'n' and c.kicker_players != [] and c.next_kicker_player != c.kicker_players:
                     if c.kicker_team == 'l':
                         self.left_pass_number += 1
                         if c.kicker_team == c.next_kicker_team:
