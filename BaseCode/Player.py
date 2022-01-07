@@ -12,6 +12,7 @@ class Player:
         self.kick_number = 0
         self.dash_number = 0
         self.turn_number = 0
+        self.tackle_number = 0
         self.is_kick = False
         self.is_turn = False
         self.is_dash = False
@@ -64,6 +65,7 @@ class Player:
         res.kick_number = int(command[1])
         res.dash_number = int(command[2])
         res.turn_number = int(command[3])
+        res.tackle_number = int(command[9])
 
         return res
 

@@ -35,6 +35,9 @@ class Cycle:
         self.next_kicker_team = 'n'
         self.is_before_goal = 'n'
         self.next_kick_ball_pos = None
+        self.next_kick_mode = None
+        self.ball_kicked = False
+        self.ball_tackled = False
 
     @staticmethod
     def parse(_string, mode, prev_cycle, pre_small_cycle):
@@ -119,6 +122,11 @@ class Cycle:
             if player_dist < 1.2:
                 if self.players[p].kick_number < next_cycle.players[p].kick_number:
                     self.kicker_players.append(p)
+                    self.ball_kicked = True
+            if player_dist < 2.0:
+                if self.players[p].tackle_number < next_cycle.players[p].tackle_number:
+                    self.kicker_players.append(p)
+                    self.ball_tackled = True
         left_kickers_number = len(list(filter(lambda x: x < 0, self.kicker_players)))
         right_kickers_number = len(list(filter(lambda x: x > 0, self.kicker_players)))
         if left_kickers_number > 0 and right_kickers_number == 0:

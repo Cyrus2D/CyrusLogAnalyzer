@@ -54,8 +54,6 @@ class Game:
                 print(e)
                 continue
             i += 1
-            # if i > 5000:
-            #     break
         file.close()
         for c in res.cycles:
             c.update_closest_to_ball()
@@ -64,10 +62,6 @@ class Game:
             res.cycles[i].update_kicker(res.cycles[i + 1] if i < len(res.cycles) - 1 else None)
 
         Game.update_kickers(res)
-
-
-        # for c in res.cycles:
-        #     print(c.cycle, c.small_cycle, c.kicker_team, c.kicker_players, c.next_kicker_team, c.next_kicker_player)
         return res
 
     @staticmethod
@@ -75,15 +69,23 @@ class Game:
         last_team = 'n'
         last_player = []
         last_ball_pos = None
+        last_mode = None
         for ic in range(len(game.cycles) - 1, 0, -1):
             # if not (game.cycles[ic].game_mode == GameMode.play_on and game.cycles[ic + 1].game_mode != GameMode.play_on):
             game.cycles[ic].next_kicker_player = last_player
             game.cycles[ic].next_kicker_team = last_team
             game.cycles[ic].next_kick_ball_pos = last_ball_pos
-            if len(game.cycles[ic].kicker_players) > 0:
+            game.cycles[ic].next_kick_mode = last_mode
+            if game.cycles[ic].game_mode != GameMode.play_on:
+                last_team = 'n'
+                last_player = []
+                last_ball_pos = None
+                last_mode = None
+            elif len(game.cycles[ic].kicker_players) > 0:
                 last_player = game.cycles[ic].kicker_players
                 last_team = game.cycles[ic].kicker_team
                 last_ball_pos = game.cycles[ic].ball.pos
+                last_mode = game.cycles[ic].game_mode
 
     def analyse(self):
         '''
