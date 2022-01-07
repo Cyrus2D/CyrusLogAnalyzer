@@ -71,7 +71,6 @@ class Game:
         last_ball_pos = None
         last_mode = None
         for ic in range(len(game.cycles) - 1, 0, -1):
-            # if not (game.cycles[ic].game_mode == GameMode.play_on and game.cycles[ic + 1].game_mode != GameMode.play_on):
             game.cycles[ic].next_kicker_player = last_player
             game.cycles[ic].next_kicker_team = last_team
             game.cycles[ic].next_kick_ball_pos = last_ball_pos
