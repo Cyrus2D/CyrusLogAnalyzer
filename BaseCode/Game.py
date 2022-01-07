@@ -120,12 +120,12 @@ class Game:
                         self.left_pass_number += 1
                         if c.kicker_team == c.next_kicker_team:
                             self.left_true_pass_number += 1
-                            self.left_true_passes.append([c.ball.pos, c.nex])
+                            self.left_true_passes.append([c.ball.pos, c.next_kick_ball_pos])
                     else:
                         self.right_pass_number += 1
                         if c.kicker_team == c.next_kicker_team:
                             self.right_true_pass_number += 1
-                            self.right_true_passes.append([c.ball.pos, c.nex])
+                            self.right_true_passes.append([c.ball.pos, c.next_kick_ball_pos])
 
         self.left_team_with_ball = [c / self.left_possession for c in self.left_team_with_ball]
         self.right_team_with_ball = [c / self.right_possession for c in self.right_team_with_ball]
