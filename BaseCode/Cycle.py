@@ -1,6 +1,7 @@
 from BaseCode.Player import Player
 from BaseCode.Ball import Ball
 import enum
+from typing import Dict
 
 
 class GameMode(enum.Enum):
@@ -24,20 +25,22 @@ class Cycle:
     def __init__(self):
         self.cycle = 0
         self.small_cycle = 0
-        self.players = {}
+        self.players: Dict[int, Player] = {}
         self.ball = Ball()
         self.game_mode = GameMode.other
         self.nearest_player = 0
         self.closest_player_dist = 0
         self.kicker_players = []
-        self.kicker_team = 'n'
+        self.kicker_team = []
         self.next_kicker_player = []
-        self.next_kicker_team = 'n'
+        self.next_kicker_team = []
         self.is_before_goal = 'n'
         self.next_kick_ball_pos = None
         self.next_kick_mode = None
         self.ball_kicked = False
         self.ball_tackled = False
+        self.left_offside_line = 0
+        self.right_offside_line = 0
 
     @staticmethod
     def parse(_string, mode, prev_cycle, pre_small_cycle):
@@ -105,7 +108,7 @@ class Cycle:
         """
         self.closest_player_dist = 1000
         for p in self.players:
-            player_dist = self.players[p].pos.dist(self.ball.pos)
+            player_dist = self.players[p].pos().dist(self.ball.pos())
             if player_dist < self.closest_player_dist:
                 self.closest_player_dist = player_dist
                 self.nearest_player = p
@@ -118,7 +121,7 @@ class Cycle:
         if not next_cycle:
             return
         for p in self.players:
-            player_dist = self.players[p].pos.dist(self.ball.pos)
+            player_dist = self.players[p].pos().dist(self.ball.pos())
             if player_dist < 1.2:
                 if self.players[p].kick_number < next_cycle.players[p].kick_number:
                     self.kicker_players.append(p)
@@ -136,5 +139,21 @@ class Cycle:
         elif left_kickers_number > 0 and right_kickers_number > 0:
             self.kicker_team = 'b'
 
+    def update_offside_lines(self):
+        left_players_x = []
+        right_players_x = []
+        for p in self.players:
+            if p < 0:
+                left_players_x.append(self.players[p].pos().x())
+            elif p > 0:
+                right_players_x.append(self.players[p].pos().x())
+        left_players_x.sort()
+        right_players_x.sort(reverse=True)
+        self.left_offside_line = left_players_x[1]
+        self.right_offside_line = right_players_x[1]
 
+    def __str__(self):
+        return f'cycle {self.cycle}.{self.small_cycle}, ball pos {self.ball.pos()}'
 
+    def __repr__(self):
+        print(str(self))
