@@ -7,9 +7,6 @@ class Ball:
         self._pos: Vector2D = Vector2D(0, 0)
         self._vel: Vector2D = Vector2D(0, 0)
 
-    def __str__(self):
-        return '(ball: ' + str(self._pos) + ',' + str(self._vel) + ')'
-
     def pos(self) -> Vector2D:
         return self._pos
 
@@ -21,6 +18,14 @@ class Ball:
 
     def vel_copy(self) -> Vector2D:
         return copy.copy(self._vel)
+
+    def set_pos(self, _x, _y):
+        self._pos.x = _x
+        self._pos.y = _y
+
+    def set_vel(self, _x, _y):
+        self._vel.x = _x
+        self._vel.y = _y
 
     @staticmethod
     def parse(_string):
@@ -34,13 +39,8 @@ class Ball:
         res._vel = Vector2D(float(_string[2]), float(_string[3]))
         return res
 
-    def set_pos(self, _x, _y):
-        self._pos.x = _x
-        self._pos.y = _y
-
-    def set_vel(self, _x, _y):
-        self._vel.x = _x
-        self._vel.y = _y
-
     def travel_distance(self):
         return abs(self._vel.r() * (1 - pow(0.96, 40)) / (1 - 0.96))
+
+    def __str__(self):
+        return '(ball: ' + str(self._pos) + ',' + str(self._vel) + ')'

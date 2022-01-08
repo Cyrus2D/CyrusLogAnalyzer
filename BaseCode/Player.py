@@ -85,7 +85,6 @@ class Player:
         res.dash_number = int(command[2])
         res.turn_number = int(command[3])
         res.tackle_number = int(command[9])
-
         return res
 
     def __str__(self):
