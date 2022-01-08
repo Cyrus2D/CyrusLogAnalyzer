@@ -1,5 +1,5 @@
-from BaseCode.Math2D.vector_2d import Vector2D
-from BaseCode.Math2D.angle_deg import AngleDeg
+from PyrusGeom.vector_2d import Vector2D
+from PyrusGeom.angle_deg import AngleDeg
 import copy
 
 

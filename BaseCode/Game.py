@@ -1,10 +1,10 @@
 from BaseCode.Cycle import Cycle
 from BaseCode.Cycle import GameMode
 from BaseCode.Actions import Pass, Shoot
-from BaseCode.Math2D.vector_2d import Vector2D
-from BaseCode.Math2D.ray_2d import Ray2D
-from BaseCode.Math2D.line_2d import Line2D
-from BaseCode.Math2D.angle_deg import AngleDeg
+from PyrusGeom.vector_2d import Vector2D
+from PyrusGeom.ray_2d import Ray2D
+from PyrusGeom.line_2d import Line2D
+from PyrusGeom.angle_deg import AngleDeg
 from typing import List
 
 

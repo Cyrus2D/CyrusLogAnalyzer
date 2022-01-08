@@ -1,4 +1,4 @@
-from BaseCode.Math2D.vector_2d import Vector2D
+from PyrusGeom.vector_2d import Vector2D
 import copy
 
 
