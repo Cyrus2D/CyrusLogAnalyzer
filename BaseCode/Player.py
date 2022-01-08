@@ -1,12 +1,13 @@
-from BaseCode.Math import Vector2D
-from BaseCode.Math import Angle
+from BaseCode.Math2D.vector_2d import Vector2D
+from BaseCode.Math2D.angle_deg import AngleDeg
+import copy
 
 
 class Player:
     def __init__(self):
-        self.pos = Vector2D()
-        self.vel = Vector2D()
-        self.body = Angle()
+        self._pos: Vector2D = Vector2D()
+        self._vel: Vector2D = Vector2D()
+        self._body: AngleDeg = AngleDeg()
         self.unum = 0
         self.side = 'n'
         self.kick_number = 0
@@ -17,16 +18,34 @@ class Player:
         self.is_turn = False
         self.is_dash = False
 
+    def pos(self) -> Vector2D:
+        return self._pos
+
+    def vel(self) -> Vector2D:
+        return self._vel
+
+    def body(self) -> AngleDeg:
+        return self._body
+
+    def pos_copy(self) -> Vector2D:
+        return copy.copy(self._pos)
+
+    def vel_copy(self) -> Vector2D:
+        return copy.copy(self._vel)
+
+    def body_copy(self) -> AngleDeg:
+        return copy.copy(self._body)
+
     def set_pos(self, _x, _y):
-        self.pos.x = _x
-        self.pos.y = _y
+        self._pos.x = _x
+        self._pos.y = _y
 
     def set_vel(self, _x, _y):
-        self.vel.x = _x
-        self.vel.y = _y
+        self._vel.x = _x
+        self._vel.y = _y
 
     def set_body(self, _a):
-        self.body = Angle(_a)
+        self._body = AngleDeg(_a)
 
     def set_unum(self, _u):
         self.unum = _u
@@ -55,9 +74,9 @@ class Player:
         end_pv = _string.find('(', end)
         pv = _string[end+1:end_pv].strip(' ')
         pv = pv.split(' ')
-        res.pos = Vector2D.set_x_y(pv[2], pv[3])
-        res.vel = Vector2D.set_x_y(pv[4], pv[5])
-        res.body = Angle.set_angle(pv[6])
+        res._pos = Vector2D(float(pv[2]), float(pv[3]))
+        res._vel = Vector2D(float(pv[4]), float(pv[5]))
+        res._body = AngleDeg(float(pv[6]))
         start = _string.find('(c')
         end = _string.find(')', start)
         command = _string[start:end]
@@ -70,4 +89,4 @@ class Player:
         return res
 
     def __str__(self):
-        return '(' + self.side + ' ' + str(self.pos) + str(self.vel) + str(self.body) + ')'
+        return '(' + self.side + ' ' + str(self._pos) + str(self._vel) + str(self._body) + ')'
