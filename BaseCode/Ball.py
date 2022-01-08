@@ -1,13 +1,26 @@
-from BaseCode.Math import Vector2D
+from BaseCode.Math2D.vector_2d import Vector2D
+import copy
 
 
 class Ball:
     def __init__(self):
-        self.pos = Vector2D.set_x_y(0, 0)
-        self.vel = Vector2D.set_x_y(0, 0)
+        self._pos: Vector2D = Vector2D(0, 0)
+        self._vel: Vector2D = Vector2D(0, 0)
 
     def __str__(self):
-        return '(ball: ' + str(self.pos) + ',' + str(self.vel) + ')'
+        return '(ball: ' + str(self._pos) + ',' + str(self._vel) + ')'
+
+    def pos(self) -> Vector2D:
+        return self._pos
+
+    def vel(self) -> Vector2D:
+        return self._vel
+
+    def pos_copy(self) -> Vector2D:
+        return copy.copy(self._pos)
+
+    def vel_copy(self) -> Vector2D:
+        return copy.copy(self._vel)
 
     @staticmethod
     def parse(_string):
@@ -17,14 +30,17 @@ class Ball:
         _string = _string.replace('b', '')
         _string = _string.strip(' ')
         _string = _string.split(' ')
-        res.pos = Vector2D.set_x_y(_string[0], _string[1])
-        res.vel = Vector2D.set_x_y(_string[2], _string[3])
+        res._pos = Vector2D(float(_string[0]), float(_string[1]))
+        res._vel = Vector2D(float(_string[2]), float(_string[3]))
         return res
 
     def set_pos(self, _x, _y):
-        self.pos.x = _x
-        self.pos.y = _y
+        self._pos.x = _x
+        self._pos.y = _y
 
     def set_vel(self, _x, _y):
-        self.vel.x = _x
-        self.vel.y = _y
+        self._vel.x = _x
+        self._vel.y = _y
+
+    def travel_distance(self):
+        return abs(self._vel.r() * (1 - pow(0.96, 40)) / (1 - 0.96))
