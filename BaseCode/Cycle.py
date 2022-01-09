@@ -34,7 +34,6 @@ class Cycle:
         self.kicker_team = []
         self.next_kicker_player = []
         self.next_kicker_team = []
-        self.is_before_goal = 'n'
         self.next_kick_ball_pos = None
         self.next_kick_mode = None
         self.ball_kicked = False
