@@ -19,7 +19,8 @@ class Pass:
 
 
 class Shoot:
-    def __init__(self, kicker, start_pos, last_pos, target_pos, start_cycle, end_cycle, kicker_team, successful, goalie_pos):
+    def __init__(self, kicker, start_pos, last_pos, target_pos, start_cycle, end_cycle, kicker_team, successful,
+                 goalie_pos):
         self.kicker = kicker
         self.start_pos = start_pos
         self.last_pos = last_pos

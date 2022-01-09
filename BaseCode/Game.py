@@ -31,16 +31,22 @@ class Game:
         self.right_passes = []
         self.left_shoot = []
         self.right_shoot = []
+        self.left_shoot_number = 0
+        self.right_shoot_number = 0
+        self.left_goal_detected = 0
+        self.right_goal_detected = 0
+        self.left_goal_cycles = []
+        self.right_goal_cycles = []
 
     @staticmethod
     def read_log(path):
-        '''
-        update cycles of game(playon and other),
+        """
+        update cycles of game(play-on and other),
         update nearest player to ball in cycles,
         update kicker player in cycles using prev cycle
         :param path: log Path
         :return: Game
-        '''
+        """
         res = Game()
         file = open(path, 'r')
         lines = file.readlines()
@@ -48,33 +54,24 @@ class Game:
         mode = GameMode.other
         pre_cycle = 0
         pre_small_cycle = 0
-        for l in lines:
-            # try:
-            if l.startswith('(show'):
-                res.cycles.append(Cycle.parse(l, mode, pre_cycle, pre_small_cycle))
-                res.cycle_dict[(res.cycles[-1].cycle, res.cycles[-1].small_cycle)] = len(res.cycles) - 1
-                pre_cycle = res.cycles[-1].cycle
-                pre_small_cycle = res.cycles[-1].small_cycle
-            elif l.startswith('(playmode'):
-                mode = Cycle.pars_mode(l)
-            elif l.startswith('(team'):
-                tmp = l.rstrip('\n').strip(')').split(' ')
-                res.left_team = tmp[2]
-                res.right_team = tmp[3]
-                right_score_changed = False
-                if res.left_score != int(tmp[4]):
+        for line in lines:
+            try:
+                if line.startswith('(show'):
+                    res.cycles.append(Cycle.parse(line, mode, pre_cycle, pre_small_cycle))
+                    res.cycle_dict[(res.cycles[-1].cycle, res.cycles[-1].small_cycle)] = len(res.cycles) - 1
+                    pre_cycle = res.cycles[-1].cycle
+                    pre_small_cycle = res.cycles[-1].small_cycle
+                elif line.startswith('(playmode'):
+                    mode = Cycle.pars_mode(line)
+                elif line.startswith('(team'):
+                    tmp = line.rstrip('\n').strip(')').split(' ')
+                    res.left_team = tmp[2]
+                    res.right_team = tmp[3]
                     res.left_score = int(tmp[4])
-                elif res.right_score != int(tmp[5]):
                     res.right_score = int(tmp[5])
-                    right_score_changed = True
-                if res.left_score > 0 or res.right_score > 0:
-                    if right_score_changed:
-                        res.cycles[-1].is_before_goal = 'r'
-                    else:
-                        res.cycles[-1].is_before_goal = 'l'
-            # except Exception as e:
-            #     print(e)
-            #     continue
+            except Exception as e:
+                print(e)
+                continue
             i += 1
         file.close()
         for c in res.cycles:
@@ -87,7 +84,7 @@ class Game:
         return res
 
     @staticmethod
-    def update_kickers(game):
+    def update_kickers(game) -> None:
         last_team = []
         last_player = []
         last_ball_pos = None
@@ -105,7 +102,7 @@ class Game:
             elif len(game.cycles[ic].kicker_players) > 0:
                 last_player = game.cycles[ic].kicker_players
                 last_team = game.cycles[ic].kicker_team
-                last_ball_pos = game.cycles[ic].ball._pos
+                last_ball_pos = game.cycles[ic].ball.pos()
                 last_mode = game.cycles[ic].game_mode
 
     def analyse(self):
@@ -114,11 +111,16 @@ class Game:
         self.analyse_pass()
         self.analyse_shoot('l')
         self.analyse_shoot('r')
+        self.analyse_goal()
+
+    def update_offside_line(self):
+        for i in range(0, len(self.cycles) - 1):
+            self.cycles[i].update_offside_lines()
 
     def analyse_possession(self):
         for c in self.cycles:
             if c.game_mode == GameMode.play_on:
-                ball_pos = c.ball._pos
+                ball_pos = c.ball.pos()
                 if len(c.next_kicker_team) == 1 and 'l' in c.next_kicker_team:
                     if ball_pos.x() < -52.5 + 105.0 / 4.0:
                         self.left_team_with_ball_per_area[0] += 1
@@ -146,7 +148,6 @@ class Game:
 
     def analyse_pass(self):
         for c in self.cycles:
-            # if c.game_mode == GameMode.play_on or :
             if len(c.kicker_team) > 0 and len(c.kicker_players) != 0 and c.next_kicker_player != c.kicker_players:
                 if len(c.kicker_team) == 1 and 'l' in c.kicker_team:
                     self.left_pass_number += 1
@@ -155,7 +156,7 @@ class Game:
                     self.left_passes.append(Pass(
                         sender=c.kicker_players,
                         receiver=c.next_kicker_player,
-                        start_pos=c.ball._pos,
+                        start_pos=c.ball.pos(),
                         last_pos=c.next_kick_ball_pos,
                         cycle=c.cycle,
                         small_cycle=c.small_cycle,
@@ -170,7 +171,7 @@ class Game:
                     self.right_passes.append(Pass(
                         sender=c.kicker_players,
                         receiver=c.next_kicker_player,
-                        start_pos=c.ball._pos,
+                        start_pos=c.ball.pos(),
                         last_pos=c.next_kick_ball_pos,
                         cycle=c.cycle,
                         small_cycle=c.small_cycle,
@@ -193,7 +194,7 @@ class Game:
         for c in self.cycles:
             if last_shoot:
                 go_next = False
-                last_shoot.last_pos = c.ball._pos
+                last_shoot.last_pos = c.ball.pos()
                 if last_shoot.start_cycle < c.cycle - 40:
                     go_next = True
                 if not go_next and c.game_mode == goal_mode:
@@ -218,32 +219,34 @@ class Game:
                 continue
             if team_side not in c.kicker_team:
                 continue
-            if c.ball._pos.dist(Vector2D(goal_x, 0)) > 40:
+            if c.ball.pos().dist(Vector2D(goal_x, 0)) > 40:
                 continue
             if team_side in c.next_kicker_team:
                 continue
             next_cycle = self.get_cycle(c.cycle + 1, 0)
+            if not next_cycle:
+                break
             ball_travel_dist = next_cycle.ball.travel_distance()
-            if ball_travel_dist + 10 < c.ball._pos.dist(Vector2D(goal_x, 0)):
+            if ball_travel_dist + 10 < c.ball.pos().dist(Vector2D(goal_x, 0)):
                 continue
             if team_side == 'l':
-                if 90 < next_cycle.ball._vel.th().degree() or next_cycle.ball._vel.th().degree() < -90:
+                if 90 < next_cycle.ball.vel().th().degree() or next_cycle.ball.vel().th().degree() < -90:
                     continue
             else:
-                if -90 < next_cycle.ball._vel.th().degree() < 90:
+                if -90 < next_cycle.ball.vel().th().degree() < 90:
                     continue
-            shoot_ray = Ray2D(origin=c.ball._pos, dir_point=next_cycle.ball._pos)
+            shoot_ray = Ray2D(origin=c.ball.pos(), dir_point=next_cycle.ball.vel())
             goal_line = Line2D(origin=Vector2D(goal_x, 0), angle=AngleDeg(90))
             intersection = shoot_ray.intersection(line=goal_line)
             if not intersection:
                 continue
             if intersection.absY() > 10:
                 continue
-            if ball_travel_dist < intersection.dist(c.ball._pos):
+            if ball_travel_dist < intersection.dist(c.ball.pos()):
                 continue
             last_shoot = Shoot(
                             kicker=c.kicker_players,
-                            start_pos=c.ball._pos,
+                            start_pos=c.ball.pos(),
                             last_pos=None,
                             target_pos=intersection,
                             start_cycle=c.cycle,
@@ -252,15 +255,29 @@ class Game:
                             successful=False,
                             goalie_pos=None
                         )
+        if team_side == 'l':
+            self.left_shoot_number = len(self.left_shoot)
+            self.left_goal_detected = sum(map(lambda shoot: shoot.successful, self.left_shoot))
+        else:
+            self.right_shoot_number = len(self.right_shoot)
+            self.right_goal_detected = sum(map(lambda shoot: shoot.successful, self.right_shoot))
 
-    def update_offside_line(self):
-        for i in range(0, len(self.cycles) - 1):
-            self.cycles[i].update_offside_lines()
+    def analyse_goal(self):
+        for c in self.cycles:
+            if c.small_cycle > 0:
+                continue
+            if c.game_mode == GameMode.goal_l:
+                self.left_goal_cycles.append(c.cycle)
+            if c.game_mode == GameMode.goal_r:
+                self.right_goal_cycles.append(c.cycle)
 
     def print_analyse(self):
+        print('-------')
         print('Possession:', 'left:', self.left_possession, 'right:', self.right_possession)
         print('Pass Number:', 'left:', self.left_pass_number, 'right:', self.right_pass_number)
-        print('True Pass:', 'left:', self.left_correct_pass_number / (self.left_pass_number + 1) * 100, 'right:', self.right_correct_pass_number / (self.right_pass_number + 1) * 100)
+        print('Correct Pass Percent:', 'left:', self.left_correct_pass_number / (self.left_pass_number + 1) * 100,
+              'right:', self.right_correct_pass_number / (self.right_pass_number + 1) * 100)
+        print('Score:', self.left_team, self.left_score, 'vs', self.right_score, self.right_team)
 
     def get_dictionary(self):
         res = dict()
@@ -279,10 +296,13 @@ class Game:
         res['left_win'] = 1 if self.left_score > self.right_score else 0
         res['right_win'] = 1 if self.left_score < self.right_score else 0
         res['draw'] = 1 if self.left_score == self.right_score else 0
+        res['left_shoot_number'] = self.left_shoot_number
+        res['right_shoot_number'] = self.right_shoot_number
+        res['left_goal_detected'] = self.left_goal_detected
+        res['right_goal_detected'] = self.right_goal_detected
         return res
 
     def get_cycle(self, cycle, small_cycle) -> Cycle:
-        try:
-            return self.cycles[self.cycle_dict[(cycle, small_cycle)]]
-        except:
+        if len(self.cycles) - 1 < cycle:
             return None
+        return self.cycles[self.cycle_dict[(cycle, small_cycle)]]
