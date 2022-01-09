@@ -1,4 +1,5 @@
-
+from CyrusGeom2D.vector_2d import Vector2D
+from CyrusGeom2D.angle_deg import AngleDeg
 from BaseCode.Game import Game
 import sys
 import os
@@ -18,32 +19,32 @@ def main(path: str, player: int):
         print(f)
         g = Game.read_log(os.path.join(path, f))
         for c in g.cycles:
-            if c.ball.pos.x < 0:
+            if c.ball.pos().x() < 0:
                 continue
-            if c.kicker_team is 'l':
+            if c.kicker_team == 'l':
                 origin_data.append([c.cycle,
-                                    c.players[player].pos.get_rotate(),
-                                    c.ball.pos.get_rotate(),
-                                    c.players[player].body.get_rotate()])
+                                    c.players[player].pos().rotated_vector(180),
+                                    c.ball.pos().rotated_vector(180),
+                                    c.players[player].body().get_reverse()])
         file_number += 1
         print(file_number, len(origin_data))
     f = open('golie_data_origin', 'w')
     for d in origin_data:
-        player_pos = d[1]
-        ball_pos = d[2]
-        player_body = d[3]
+        player_pos: Vector2D = d[1]
+        ball_pos: Vector2D = d[2]
+        player_body: AngleDeg = d[3]
 
-        f.write(str((ball_pos.x + 52.5) / 105.0) + ',' + str((ball_pos.y + 34.0) / 68.0) + ',' +
-                str((player_pos.x + 52.5) / 105.0) + ',' + str((player_pos.y + 34.0) / 68.0) + ',' +
-                str(player_body.normalize_0_1()) +
+        f.write(str((ball_pos.x() + 52.5) / 105.0) + ',' + str((ball_pos.y() + 34.0) / 68.0) + ',' +
+                str((player_pos.x() + 52.5) / 105.0) + ',' + str((player_pos.y() + 34.0) / 68.0) + ',' +
+                str(player_body.get_normalized()) +
                 '\n')
-        player_pos.y = -player_pos.y
-        ball_pos.y = -ball_pos.y
-        player_body.angle = -player_body.angle
+        player_pos._y = -player_pos.y()
+        ball_pos._y = -ball_pos.y()
+        player_body._degree = -player_body.degree()
 
-        f.write(str((ball_pos.x + 52.5) / 105.0) + ',' + str((ball_pos.y + 34.0) / 68.0) + ',' +
-                str((player_pos.x + 52.5) / 105.0) + ',' + str((player_pos.y + 34.0) / 68.0) + ',' +
-                str(player_body.normalize_0_1()) +
+        f.write(str((ball_pos.x() + 52.5) / 105.0) + ',' + str((ball_pos.y() + 34.0) / 68.0) + ',' +
+                str((player_pos.x() + 52.5) / 105.0) + ',' + str((player_pos.y() + 34.0) / 68.0) + ',' +
+                str(player_body.get_normalized()) +
                 '\n')
     f.close()
     # f = open('golie_data_angle', 'w')
