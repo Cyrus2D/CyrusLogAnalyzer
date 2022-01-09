@@ -1,31 +1,32 @@
 from BaseCode.Game import Game
 import sys
 import os
-from BaseCode import GameMode
+from BaseCode.Cycle import GameMode
 
 
-def make_X(cycle, player_unum):
-    return [cycle.players[player_unum].pos.x, cycle.players[player_unum].pos.y]
+def make_x(cycle, player_unum):
+    return [cycle.players[player_unum].pos().x(), cycle.players[player_unum].pos().y()]
 
 
-def make_Y(cycle, player_unum):
-    return [cycle.players[player_unum].pos.x, cycle.players[player_unum].pos.y]
+def make_y(cycle, player_unum):
+    return [cycle.players[player_unum].pos().x(), cycle.players[player_unum].pos().y()]
 
 
 def make_data_set(cycles, start_end, player):
     start = start_end[0]
     end = start_end[1]
-    if end - start < 10:
+    if end - start < 5:
         return None
     data_set = []
     for i in range(start, end - 3):
         X = []
         for j in range(i, i + 5):
-            X += make_X(cycles[j], player)
+            X += make_x(cycles[j], player)
         Y = []
         for j in range(i + 5, i + 7):
-            Y += make_Y(cycles[j], player)
+            Y += make_y(cycles[j], player)
         data_set.append((X, Y))
+    print(data_set)
     return data_set
 
 
@@ -46,8 +47,11 @@ def main(path, player, offense):
             else:
                 if len(seq) > 0 and seq[-1][1] == 0:
                     seq[-1][1] = ic - 1
+        print(seq)
         for s in seq:
-            data_set += make_data_set(g.cycles, s, player)
+            res = make_data_set(g.cycles, s, player)
+            if res:
+                data_set += res
         break
 
 
