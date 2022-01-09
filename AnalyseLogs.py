@@ -18,8 +18,6 @@ def main(path, out_path=None, thread_number=2):
     for f in os.listdir(path):
         if not f.endswith('.rcg'):
             continue
-        # if game_number > 10:
-        #     break
         file = os.path.join(path, f)
         files.append(file)
     result_list = process_pool.map(analyze_games, files)
@@ -48,8 +46,11 @@ def main(path, out_path=None, thread_number=2):
             results['left_win'] + results['right_win'])
     results['left_true_pass_number'] = results['left_true_pass_number'] / results['left_pass_number']
     results['right_true_pass_number'] = results['right_true_pass_number'] / results['right_pass_number']
+    results['left_shoot_accuracy'] = results['left_goal_detected'] / results['left_shoot_number'] * 100
+    results['right_shoot_accuracy'] = results['right_goal_detected'] / results['right_shoot_number'] * 100
     if out_path:
         out_file = open(out_path, 'w')
+    print('#' * 100)
     for key in results.keys():
         print(key, ':', results[key])
         if out_path:
