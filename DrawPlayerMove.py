@@ -14,11 +14,10 @@ def main(path, player):
     for f in os.listdir(path):
         g = Game.read_log(os.path.join(path, f))
         for c in g.cycles:
-            p_pos.append(c.players[player].pos)
-        break
+            p_pos.append(c.players[player].pos())
     plt.xlim(-55, +55)
     plt.ylim(-34, +34)
-    plt.scatter([x.x for x in p_pos], [x.y for x in p_pos], s=1, c='blue')
+    plt.scatter([x.x() for x in p_pos], [x.y() for x in p_pos], s=1, c='blue')
     plt.show()
 
 
