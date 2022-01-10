@@ -1,4 +1,5 @@
 from BaseCode.Game import Game
+from BaseCode.Cycle import GameMode
 import os
 import sys
 import multiprocessing
@@ -9,7 +10,20 @@ def analyze_games(file):
     g = Game.read_log(file)
     g.analyse()
     g.print_analyse()
-    return g.get_dictionary()
+    cycles_ball_in_pen = 0
+    cycles_ball_in_pen_kick = 0
+    for c in g.cycles():
+        if c.game_mode() != GameMode.play_on:
+            continue
+        if c.ball().pos_().x() < -35 and c.ball().pos_().absY() < 20:
+            if 'r' in c.next_kicker_team:
+                cycles_ball_in_pen += 1
+            if 'r' in c.kicker_team:
+                cycles_ball_in_pen_kick += 1
+    res = g.get_dictionary()
+    res['cycles_ball_in_pen'] = cycles_ball_in_pen
+    res['cycles_ball_in_pen_kick'] = cycles_ball_in_pen_kick
+    return res
 
 
 def main(path, out_path=None, thread_number=2):
