@@ -14,16 +14,16 @@ def read_log(add):
     g = Game.read_log(os.path.join(path, file_name))
     passes = []
 
-    for c in g.cycles:
-        if c.game_mode == GameMode.play_on and c.next_kicker_team == team:
-            ball_posses.append(c.ball.pos())
-            heat_map[int((c.ball.pos().x() + 52.5) / 5), int((c.ball.pos().y() + 34.5) / 5)] += 1
-            x_map[int((c.ball.pos().x() + 52.5) / 5)] += 1
+    for c in g.cycles():
+        if c.game_mode() == GameMode.play_on and c.next_kicker_team == team:
+            ball_posses.append(c.ball().pos_())
+            heat_map[int((c.ball().pos_().x() + 52.5) / 5), int((c.ball().pos_().y() + 34.5) / 5)] += 1
+            x_map[int((c.ball().pos_().x() + 52.5) / 5)] += 1
             if c.next_kick_ball_pos and \
                     c.next_kicker_team == team and \
                     c.kicker_team == team and \
                     c.next_kicker_player != c.kicker_players:
-                passes.append((c.ball.pos(), c.next_kick_ball_pos))
+                passes.append((c.ball().pos_(), c.next_kick_ball_pos))
     return ball_posses, heat_map, x_map, passes
 
 
