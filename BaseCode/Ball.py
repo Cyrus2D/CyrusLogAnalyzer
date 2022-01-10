@@ -1,34 +1,45 @@
+from __future__ import annotations
 from PyrusGeom.vector_2d import Vector2D
 import copy
 
 
 class Ball:
-    def __init__(self):
+    def __init__(self) -> None:
         self._pos: Vector2D = Vector2D(0, 0)
         self._vel: Vector2D = Vector2D(0, 0)
 
     def pos(self) -> Vector2D:
-        return self._pos
+        return self._pos.copy()
 
     def vel(self) -> Vector2D:
+        return self._vel.copy()
+
+    def pos_(self) -> Vector2D:
+        return self._pos
+
+    def vel_(self) -> Vector2D:
         return self._vel
 
     def pos_copy(self) -> Vector2D:
-        return copy.copy(self._pos)
+        return self._pos.copy()
 
     def vel_copy(self) -> Vector2D:
-        return copy.copy(self._vel)
+        return self._vel.copy()
 
-    def set_pos(self, _x, _y):
-        self._pos.x = _x
-        self._pos.y = _y
+    def set_pos(self, x, y) -> None:
+        self._pos.assign(x, y)
 
-    def set_vel(self, _x, _y):
-        self._vel.x = _x
-        self._vel.y = _y
+    def set_vel(self, x, y) -> None:
+        self._vel.assign(x, y)
+
+    def copy(self) -> Ball:
+        return copy.deepcopy(self)
+
+    def travel_distance(self) -> float:
+        return abs(self._vel.r() * (1 - pow(0.96, 40)) / (1 - 0.96))
 
     @staticmethod
-    def parse(_string):
+    def parse(_string) -> Ball:
         res = Ball()
         _string = _string.replace('(', '')
         _string = _string.replace(')', '')
@@ -39,8 +50,5 @@ class Ball:
         res._vel = Vector2D(float(_string[2]), float(_string[3]))
         return res
 
-    def travel_distance(self):
-        return abs(self._vel.r() * (1 - pow(0.96, 40)) / (1 - 0.96))
-
-    def __str__(self):
+    def __str__(self) -> str:
         return '(ball: ' + str(self._pos) + ',' + str(self._vel) + ')'

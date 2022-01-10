@@ -9,5 +9,5 @@ def main(path):
 
 
 if __name__ == "__main__":
-    path = 'Data'
+    path = 'Data/20190314135110-CYRUS_0-vs-HELIOS2018_1.rcg'
     main(path)

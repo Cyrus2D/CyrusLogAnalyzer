@@ -1,15 +1,16 @@
+from __future__ import annotations
 from PyrusGeom.vector_2d import Vector2D
 from PyrusGeom.angle_deg import AngleDeg
 import copy
 
 
 class Player:
-    def __init__(self):
-        self._pos: Vector2D = Vector2D()
-        self._vel: Vector2D = Vector2D()
-        self._body: AngleDeg = AngleDeg()
-        self.unum = 0
-        self.side = 'n'
+    def __init__(self) -> None:
+        self._pos: Vector2D = Vector2D(0, 0)
+        self._vel: Vector2D = Vector2D(0, 0)
+        self._body: AngleDeg = AngleDeg(0)
+        self._unum = 0
+        self._side = 'n'
         self.kick_number = 0
         self.dash_number = 0
         self.turn_number = 0
@@ -19,12 +20,27 @@ class Player:
         self.is_dash = False
 
     def pos(self) -> Vector2D:
-        return self._pos
+        return self._pos.copy()
 
     def vel(self) -> Vector2D:
-        return self._vel
+        return self._vel.copy()
 
     def body(self) -> AngleDeg:
+        return self._body.copy()
+
+    def unum(self) -> int:
+        return self._unum
+
+    def side(self) -> str:
+        return self._side
+
+    def pos_(self) -> Vector2D:
+        return self._pos
+
+    def vel_(self) -> Vector2D:
+        return self._vel
+
+    def body_(self) -> AngleDeg:
         return self._body
 
     def pos_copy(self) -> Vector2D:
@@ -36,41 +52,44 @@ class Player:
     def body_copy(self) -> AngleDeg:
         return copy.copy(self._body)
 
-    def set_pos(self, _x, _y):
-        self._pos.x = _x
-        self._pos.y = _y
+    def set_pos(self, x, y) -> None:
+        self._pos._x = x
+        self._pos._y = y
 
-    def set_vel(self, _x, _y):
-        self._vel.x = _x
-        self._vel.y = _y
+    def set_vel(self, x, y) -> None:
+        self._vel.x = x
+        self._vel.y = y
 
-    def set_body(self, _a):
-        self._body = AngleDeg(_a)
+    def set_body(self, a) -> None:
+        self._body = AngleDeg(a)
 
-    def set_unum(self, _u):
-        self.unum = _u
+    def set_unum(self, u) -> None:
+        self._unum = u
 
-    def set_pos_vel(self, _x, _y, _vx, _vy):
-        self.set_pos(_x, _y)
-        self.set_vel(_vx, _vy)
+    def set_pos_vel(self, x, y, vx, vy) -> None:
+        self.set_pos(x, y)
+        self.set_vel(vx, vy)
 
-    def set_pos_vel_unum(self, _x, _y, _vx, _vy, _u):
-        self.set_pos(_x, _y)
-        self.set_vel(_vx, _vy)
-        self.set_unum(_u)
+    def set_pos_vel_unum(self, x, y, vx, vy, u) -> None:
+        self.set_pos(x, y)
+        self.set_vel(vx, vy)
+        self.set_unum(u)
 
-    def set_pos_vel_body_unum(self, _x, _y, _vx, _vy, _a, _u):
-        self.set_pos(_x, _y)
-        self.set_vel(_vx, _vy)
-        self.set_unum(_u)
-        self.set_body(_a)
+    def set_pos_vel_body_unum(self, x, y, vx, vy, a, u) -> None:
+        self.set_pos(x, y)
+        self.set_vel(vx, vy)
+        self.set_unum(u)
+        self.set_body(a)
+
+    def copy(self) -> Player:
+        return copy.deepcopy(self)
 
     @staticmethod
-    def parse(_string):
+    def parse(_string) -> Player:
         res = Player()
         end = _string.find(')')
-        res.side = _string[2]
-        res.unum = int(_string[4:end])
+        res._side = _string[2]
+        res._unum = int(_string[4:end])
         end_pv = _string.find('(', end)
         pv = _string[end+1:end_pv].strip(' ')
         pv = pv.split(' ')
@@ -87,5 +106,5 @@ class Player:
         res.tackle_number = int(command[9])
         return res
 
-    def __str__(self):
-        return '(' + self.side + ' ' + str(self._pos) + str(self._vel) + str(self._body) + ')'
+    def __str__(self) -> str:
+        return '(' + self._side + ' ' + str(self._pos) + str(self._vel) + str(self._body) + ')'
