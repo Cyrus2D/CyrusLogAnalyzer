@@ -10,8 +10,8 @@ def read_log(add):
     g = Game.read_log(os.path.join(path, file_name))
     passes = []
 
-    for c in g.cycles:
-        if c.game_mode != GameMode.play_on:
+    for c in g.cycles():
+        if c.game_mode() != GameMode.play_on:
             continue
         if not (c.next_kicker_team == 'r' and c.kicker_team == 'r'):
             continue
@@ -20,17 +20,17 @@ def read_log(add):
         if c.next_kicker_player[0] == c.kicker_players[0]:
             continue
         players_x = []
-        for p in c.players.keys():
+        for p in c.players().keys():
             if p >= 0:
                 continue
-            players_x.append(c.players[p].pos().x())
+            players_x.append(c.players()[p].pos_().x())
         players_x.sort()
         min_def_line = players_x[1]
-        if c.ball.pos().x() < min_def_line:
+        if c.ball().pos_().x() < min_def_line:
             continue
         if c.next_kick_ball_pos.x() > min_def_line:
             continue
-        passes.append((c.ball.pos(), c.next_kick_ball_pos))
+        passes.append((c.ball().pos_(), c.next_kick_ball_pos))
     return passes
 
 

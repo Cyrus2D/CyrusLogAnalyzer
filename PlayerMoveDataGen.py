@@ -40,8 +40,8 @@ def main(path, player, offense):
     for f in os.listdir(path):
         g = Game.read_log(os.path.join(path, f))
         seq = []
-        for ic in range(len(g.cycles)):
-            if g.cycles[ic].next_kicker_team == offense and g.cycles[ic].game_mode == GameMode.play_on:
+        for ic in range(len(g.cycles())):
+            if g.cycles()[ic].next_kicker_team == offense and g.cycles()[ic].game_mode() == GameMode.play_on:
                 if len(seq) == 0 or not seq[-1][1] == 0:
                     seq.append([ic, 0])
             else:
@@ -49,7 +49,7 @@ def main(path, player, offense):
                     seq[-1][1] = ic - 1
         print(seq)
         for s in seq:
-            res = make_data_set(g.cycles, s, player)
+            res = make_data_set(g.cycles(), s, player)
             if res:
                 data_set += res
         break

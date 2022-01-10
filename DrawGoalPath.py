@@ -20,10 +20,10 @@ def main(path, side):
         for c in goal_cycles:
             goal_sequence = []
             for jc in range(c - 1, max(c - 50, 0), -1):
-                cycle_object = g.get_cycle(jc, 0)
-                if cycle_object.game_mode != GameMode.play_on:
+                cycle_object = g.cycle(jc, 0)
+                if cycle_object.game_mode() != GameMode.play_on:
                     break
-                goal_sequence.append(cycle_object.ball.pos())
+                goal_sequence.append(cycle_object.ball().pos_())
             goals_sequence.append(goal_sequence)
 
     plt.xlim(-55, +55)

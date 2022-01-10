@@ -18,14 +18,14 @@ def main(path: str, player: int):
     for f in os.listdir(path):
         print(f)
         g = Game.read_log(os.path.join(path, f))
-        for c in g.cycles:
-            if c.ball.pos().x() < 0:
+        for c in g._cycles:
+            if c._ball.pos().x() < 0:
                 continue
             if c.kicker_team == 'l':
-                origin_data.append([c.cycle,
-                                    c.players[player].pos().rotated_vector(180),
-                                    c.ball.pos().rotated_vector(180),
-                                    c.players[player].body().get_reverse()])
+                origin_data.append([c._cycle_number,
+                                    c._players[player].pos().rotated_vector(180),
+                                    c._ball.pos().rotated_vector(180),
+                                    c._players[player].body().get_reverse()])
         file_number += 1
         print(file_number, len(origin_data))
     f = open('golie_data_origin', 'w')
