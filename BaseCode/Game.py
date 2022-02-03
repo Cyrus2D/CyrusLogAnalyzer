@@ -262,9 +262,9 @@ class Game:
             else:
                 if -90 < next_cycle.ball().vel_().th().degree() < 90:
                     continue
-            shoot_ray = Ray2D(origin=c.ball().pos_(), dir_point=next_cycle.ball().vel_())
-            goal_line = Line2D(origin=Vector2D(goal_x, 0), angle=AngleDeg(90))
-            intersection = shoot_ray.intersection(line=goal_line)
+            shoot_ray = Ray2D(c.ball().pos_(), next_cycle.ball().vel_())
+            goal_line = Line2D(Vector2D(goal_x, 0), AngleDeg(90))
+            intersection = shoot_ray.intersection(goal_line)
             if not intersection:
                 continue
             if intersection.abs_y() > 10:
