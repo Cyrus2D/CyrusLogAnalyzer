@@ -7,7 +7,7 @@ import sys
 def main(path, side):
     goals_sequence = []
     number = 0
-    for file_name in os.listdir(path):
+    for file_name in os.listdir(path)[:10]:
         if not file_name.endswith('.rcg'):
             continue
         number += 1
@@ -35,7 +35,7 @@ def main(path, side):
 
 if __name__ == '__main__':
     print('Usage: python3 DrawGoalPath RCGFilesPath r or l')
-    path = 'Data'
+    path = '../icjai/danger/'
     side = 'l'
     if len(sys.argv) > 1:
         path = sys.argv[1]

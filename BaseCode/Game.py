@@ -9,6 +9,11 @@ from PyrusGeom.angle_deg import AngleDeg
 from typing import Union
 
 
+def swap(o1, o2):
+    o1, o2 = o2, o1
+    return o1, o2
+
+
 class Game:
     def __init__(self):
         self._cycles: list[Cycle] = []
@@ -108,6 +113,7 @@ class Game:
             res._cycles[i].update_kicker(res._cycles[i + 1] if i < len(res._cycles) - 1 else None)
 
         Game.update_kickers(res)
+        res.update_offside_line()
         return res
 
     @staticmethod
@@ -133,7 +139,6 @@ class Game:
                 last_mode = game.cycles()[ic].game_mode()
 
     def analyse(self):
-        self.update_offside_line()
         self.analyse_possession()
         self.analyse_pass()
         self.analyse_shoot('l')
@@ -272,16 +277,16 @@ class Game:
             if ball_travel_dist < intersection.dist(c.ball().pos_()):
                 continue
             last_shoot = Shoot(
-                            kicker=c.kicker_players,
-                            start_pos=c.ball().pos_(),
-                            last_pos=None,
-                            target_pos=intersection,
-                            start_cycle=c.cycle_number(),
-                            end_cycle=None,
-                            kicker_team=c.kicker_team,
-                            successful=False,
-                            goalie_pos=None
-                        )
+                kicker=c.kicker_players,
+                start_pos=c.ball().pos_(),
+                last_pos=None,
+                target_pos=intersection,
+                start_cycle=c.cycle_number(),
+                end_cycle=None,
+                kicker_team=c.kicker_team,
+                successful=False,
+                goalie_pos=None
+            )
         if team_side == 'l':
             self.left_shoot_number = len(self.left_shoot)
             self.left_goal_detected = sum(map(lambda shoot: shoot.successful, self.left_shoot))
@@ -297,6 +302,36 @@ class Game:
                 self.left_goal_cycles.append(c.cycle_number())
             if c.game_mode() == GameMode.goal_r:
                 self.right_goal_cycles.append(c.cycle_number())
+
+    def reverse(self):
+        for c in self._cycles:
+            c.reverse()
+        self._left_team_name, self._right_team_name = self._right_team_name, self._left_team_name
+        self._left_score, self._right_score = self._right_score, self._left_score
+        self.left_pass_number, self.left_pass_number = self.left_pass_number, self.left_pass_number
+        tmp = self.left_correct_pass_number
+        self.left_correct_pass_number = self.right_correct_pass_number
+        self.right_correct_pass_number = tmp
+        self.left_possession, self.right_possession = self.right_possession, self.left_possession
+        tmp = self.left_possession_percent
+        self.left_possession_percent = self.right_possession_percent
+        self.right_possession_percent = tmp
+        tmp = self.left_team_with_ball_per_area
+        self.left_team_with_ball_per_area = self.right_team_with_ball_per_area
+        self.right_team_with_ball_per_area = tmp
+        self.left_passes, self.right_passes = self.right_passes, self.left_passes
+        for p in self.left_passes:
+            p.reverse()
+        for p in self.right_passes:
+            p.reverse()
+        self.left_shoot, self.right_shoot = self.right_shoot, self.left_shoot
+        for s in self.left_shoot:
+            s.reverse()
+        for s in self.right_shoot:
+            s.reverse()
+        self.left_shoot_number, self.right_shoot_number = self.right_shoot_number, self.left_shoot_number
+        self.left_goal_detected, self.right_goal_detected = self.right_goal_detected, self.left_goal_detected
+        self.left_goal_cycles, self.right_goal_cycles = self.right_goal_cycles, self.left_goal_cycles
 
     def print_analyse(self):
         print('-------')

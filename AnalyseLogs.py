@@ -15,7 +15,7 @@ def analyze_games(file):
     for c in g.cycles():
         if c.game_mode() != GameMode.play_on:
             continue
-        if c.ball().pos_().x() < -35 and c.ball().pos_().absY() < 20:
+        if c.ball().pos_().x() < -35 and c.ball().pos_().abs_y() < 20:
             if 'r' in c.next_kicker_team:
                 cycles_ball_in_pen += 1
             if 'r' in c.kicker_team:
@@ -29,7 +29,7 @@ def analyze_games(file):
 def main(path, out_path=None, thread_number=2):
     process_pool = multiprocessing.Pool(processes=thread_number)
     files = []
-    for f in os.listdir(path):
+    for f in os.listdir(path)[:10]:
         if not f.endswith('.rcg'):
             continue
         file = os.path.join(path, f)
@@ -66,16 +66,20 @@ def main(path, out_path=None, thread_number=2):
         out_file = open(out_path, 'w')
     print('#' * 100)
     for key in results.keys():
-        print(key, ':', results[key])
+        if type(results[key]) in [int, float]:
+            print(key, ':', round(results[key],2))
+        else:
+            print(key, ':', results[key], 2)
         if out_path:
             out_file.write(f'{key},{results[key]}\n')
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='RCG Log Analyser')
-    parser.add_argument('--path', '-p', type=str, default='./Data/', help='path of directory or a log file')
+    parser.add_argument('--path', '-p', type=str, default='/home/nader/workspace/robo/icjai/unmark/',
+                        help='path of directory or a log file')
     parser.add_argument('--csv', type=str, default=None, help='out put path for saving result in a csv file')
-    parser.add_argument('--thread', '-t', type=int, default=2, help='number of processing thread')
+    parser.add_argument('--thread', '-t', type=int, default=30, help='number of processing thread')
 
     args = parser.parse_args()
     if len(sys.argv) > 1:

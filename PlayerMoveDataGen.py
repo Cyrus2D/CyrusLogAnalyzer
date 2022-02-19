@@ -5,11 +5,11 @@ from BaseCode.Cycle import GameMode
 
 
 def make_x(cycle, player_unum):
-    return [cycle.players[player_unum].pos().x(), cycle.players[player_unum].pos().y()]
+    return [cycle.players()[player_unum].pos_().x(), cycle.players()[player_unum].pos_().y()]
 
 
 def make_y(cycle, player_unum):
-    return [cycle.players[player_unum].pos().x(), cycle.players[player_unum].pos().y()]
+    return [cycle.players()[player_unum].pos_().x(), cycle.players()[player_unum].pos_().y()]
 
 
 def make_data_set(cycles, start_end, player):
