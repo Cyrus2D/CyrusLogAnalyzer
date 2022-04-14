@@ -29,7 +29,7 @@ def analyze_games(file):
 def main(path, out_path=None, thread_number=2):
     process_pool = multiprocessing.Pool(processes=thread_number)
     files = []
-    for f in os.listdir(path)[:10]:
+    for f in os.listdir(path)[:]:
         if not f.endswith('.rcg'):
             continue
         file = os.path.join(path, f)
@@ -58,10 +58,22 @@ def main(path, out_path=None, thread_number=2):
                 results['left_win'] + results['right_win'])
     results['right_win_exp'] = results['right_win'] + results['draw'] * results['right_win'] / (
             results['left_win'] + results['right_win'])
-    results['left_true_pass_number'] = results['left_true_pass_number'] / results['left_pass_number']
-    results['right_true_pass_number'] = results['right_true_pass_number'] / results['right_pass_number']
-    results['left_shoot_accuracy'] = results['left_goal_detected'] / results['left_shoot_number'] * 100
-    results['right_shoot_accuracy'] = results['right_goal_detected'] / results['right_shoot_number'] * 100
+    try:
+        results['left_true_pass_number'] = results['left_true_pass_number'] / results['left_pass_number']
+    except:
+        results['left_true_pass_number'] = -1
+    try:
+        results['right_true_pass_number'] = results['right_true_pass_number'] / results['right_pass_number']
+    except:
+        results['right_true_pass_number'] = -1
+    try:
+        results['left_shoot_accuracy'] = results['left_goal_detected'] / results['left_shoot_number'] * 100
+    except:
+        results['left_shoot_accuracy'] = -1
+    try:
+        results['right_shoot_accuracy'] = results['right_goal_detected'] / results['right_shoot_number'] * 100
+    except:
+        results['right_shoot_accuracy'] = -1
     if out_path:
         out_file = open(out_path, 'w')
     print('#' * 100)
@@ -76,7 +88,7 @@ def main(path, out_path=None, thread_number=2):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='RCG Log Analyser')
-    parser.add_argument('--path', '-p', type=str, default='/home/nader/workspace/robo/icjai/unmark/',
+    parser.add_argument('--path', '-p', type=str, default='./Data',
                         help='path of directory or a log file')
     parser.add_argument('--csv', type=str, default=None, help='out put path for saving result in a csv file')
     parser.add_argument('--thread', '-t', type=int, default=30, help='number of processing thread')
