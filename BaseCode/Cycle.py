@@ -214,11 +214,11 @@ class Cycle:
         left_kickers_number = len(list(filter(lambda x: x < 0, self.kicker_players)))
         right_kickers_number = len(list(filter(lambda x: x > 0, self.kicker_players)))
         if left_kickers_number > 0 and right_kickers_number == 0:
-            self.kicker_team = 'l'
+            self.kicker_team = ['l']
         elif left_kickers_number == 0 and right_kickers_number > 0:
-            self.kicker_team = 'r'
+            self.kicker_team = ['r']
         elif left_kickers_number > 0 and right_kickers_number > 0:
-            self.kicker_team = 'b'
+            self.kicker_team = ['l', 'r']
 
     def update_offside_lines(self) -> None:
         """

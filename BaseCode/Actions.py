@@ -55,7 +55,7 @@ class Shoot:
         self.last_pos.reverse()
         self.target_pos.reverse()
         for i in range(len(self.kicker_team)):
-            self.kicker_team[i] = 'l' if self.kicker_team[i] == 'r' else 'r'
+            self.kicker_team[i] = ['l'] if self.kicker_team[i] == ['r'] else ['r']
         self.goalie_pos.reverse()
 
     def __str__(self):

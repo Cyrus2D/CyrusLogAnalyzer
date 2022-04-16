@@ -69,8 +69,7 @@ class Game:
     def right_score(self) -> int:
         return self._right_score
 
-    @staticmethod
-    def read_log(path):
+    def read_log(self, path):
         """
         update cycles of game(play-on and other),
         update nearest player to ball in cycles,
@@ -78,7 +77,6 @@ class Game:
         :param path: log Path
         :return: Game
         """
-        res = Game()
         file = open(path, 'r')
         lines = file.readlines()
         i = 0
@@ -88,55 +86,54 @@ class Game:
         for line in lines:
             try:
                 if line.startswith('(show'):
-                    res._cycles.append(Cycle.parse(line, mode, pre_cycle, pre_small_cycle))
-                    res._cycles_dict[(res._cycles[-1].cycle_number(), res._cycles[-1].stop_cycle_number())] = \
-                        len(res.cycles()) - 1
-                    pre_cycle = res._cycles[-1].cycle_number()
-                    pre_small_cycle = res._cycles[-1].stop_cycle_number()
+                    self._cycles.append(Cycle.parse(line, mode, pre_cycle, pre_small_cycle))
+                    self._cycles_dict[(self._cycles[-1].cycle_number(), self._cycles[-1].stop_cycle_number())] = \
+                        len(self.cycles()) - 1
+                    pre_cycle = self._cycles[-1].cycle_number()
+                    pre_small_cycle = self._cycles[-1].stop_cycle_number()
                 elif line.startswith('(playmode'):
                     mode = Cycle.pars_mode(line)
                 elif line.startswith('(team'):
                     tmp = line.rstrip('\n').strip(')').split(' ')
-                    res._left_team_name = tmp[2]
-                    res._right_team_name = tmp[3]
-                    res._left_score = int(tmp[4])
-                    res._right_score = int(tmp[5])
+                    self._left_team_name = tmp[2]
+                    self._right_team_name = tmp[3]
+                    self._left_score = int(tmp[4])
+                    self._right_score = int(tmp[5])
             except Exception as e:
                 print(e)
                 continue
             i += 1
         file.close()
-        for c in res._cycles:
+        for c in self._cycles:
             c.update_closest_to_ball()
 
-        for i in range(1, len(res._cycles)):
-            res._cycles[i].update_kicker(res._cycles[i + 1] if i < len(res._cycles) - 1 else None)
+        for i in range(1, len(self._cycles)):
+            self._cycles[i].update_kicker(self._cycles[i + 1] if i < len(self._cycles) - 1 else None)
 
-        Game.update_kickers(res)
-        res.update_offside_line()
-        return res
+        self.update_kickers()
+        self.update_offside_line()
+        return self
 
-    @staticmethod
-    def update_kickers(game) -> None:
+    def update_kickers(self) -> None:
         last_team = []
         last_player = []
         last_ball_pos = None
         last_mode = None
-        for ic in range(len(game.cycles()) - 1, 0, -1):
-            game.cycles()[ic].next_kicker_player = last_player
-            game.cycles()[ic].next_kicker_team = last_team
-            game.cycles()[ic].next_kick_ball_pos = last_ball_pos
-            game.cycles()[ic].next_kick_mode = last_mode
-            if game.cycles()[ic].game_mode() != GameMode.play_on:
+        for ic in range(len(self.cycles()) - 1, 0, -1):
+            self.cycles()[ic].next_kicker_player = last_player
+            self.cycles()[ic].next_kicker_team = last_team
+            self.cycles()[ic].next_kick_ball_pos = last_ball_pos
+            self.cycles()[ic].next_kick_mode = last_mode
+            if self.cycles()[ic].game_mode() != GameMode.play_on:
                 last_team = []
                 last_player = []
                 last_ball_pos = None
                 last_mode = None
-            elif len(game.cycles()[ic].kicker_players) > 0:
-                last_player = game.cycles()[ic].kicker_players
-                last_team = game.cycles()[ic].kicker_team
-                last_ball_pos = game.cycles()[ic].ball().pos_()
-                last_mode = game.cycles()[ic].game_mode()
+            elif len(self.cycles()[ic].kicker_players) > 0:
+                last_player = self.cycles()[ic].kicker_players
+                last_team = self.cycles()[ic].kicker_team
+                last_ball_pos = self.cycles()[ic].ball().pos_()
+                last_mode = self.cycles()[ic].game_mode()
 
     def analyse(self):
         self.analyse_possession()
