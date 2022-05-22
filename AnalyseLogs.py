@@ -7,7 +7,7 @@ import argparse
 
 
 def analyze_games(file):
-    g = Game.read_log(file)
+    g = Game().read_log(file)
     g.analyse()
     g.print_analyse()
     cycles_ball_in_pen = 0
