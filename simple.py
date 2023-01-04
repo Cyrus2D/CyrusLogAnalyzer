@@ -2,7 +2,8 @@ from BaseCode.Game import Game
 
 
 def main(path):
-    g = Game.read_log(path)
+    g = Game()
+    g = g.read_log(path=path)
     g.analyse()
     g.print_analyse()
     return g.get_dictionary()

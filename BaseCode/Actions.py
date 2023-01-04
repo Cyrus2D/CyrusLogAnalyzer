@@ -1,5 +1,5 @@
 from __future__ import annotations
-from PyrusGeom.vector_2d import Vector2D
+from pyrusgeom.vector_2d import Vector2D
 
 
 class Pass:

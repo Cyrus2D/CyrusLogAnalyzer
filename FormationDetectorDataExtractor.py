@@ -1,7 +1,7 @@
 from BaseCode.Game import Game
 from BaseCode.Cycle import GameMode
 import matplotlib.pyplot as plt
-from PyrusGeom.vector_2d import Vector2D
+from pyrusgeom.vector_2d import Vector2D
 import sys
 import os
 

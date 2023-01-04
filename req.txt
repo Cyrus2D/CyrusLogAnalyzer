@@ -1,6 +1,5 @@
 certifi==2021.10.8
 cycler==0.11.0
-CyrusGeom2D==0.0.1
 Cython==0.29.26
 fonttools==4.28.5
 kiwisolver==1.3.2
@@ -8,9 +7,10 @@ matplotlib==3.5.1
 numpy==1.22.0
 packaging==21.3
 Pillow==9.0.0
-pyGeom2D==0.0.1
 pyparsing==3.0.6
-PyrusGeom==0.0.1
 python-dateutil==2.8.2
 scipy==1.7.3
 six==1.16.0
+# CyrusGeom2D==0.0.1
+# pyGeom2D==0.0.1
+pyrusgeom==0.1.0

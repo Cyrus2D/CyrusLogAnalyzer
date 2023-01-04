@@ -2,10 +2,10 @@ from __future__ import annotations
 from BaseCode.Cycle import Cycle
 from BaseCode.Cycle import GameMode
 from BaseCode.Actions import Pass, Shoot
-from PyrusGeom.vector_2d import Vector2D
-from PyrusGeom.ray_2d import Ray2D
-from PyrusGeom.line_2d import Line2D
-from PyrusGeom.angle_deg import AngleDeg
+from pyrusgeom.vector_2d import Vector2D
+from pyrusgeom.ray_2d import Ray2D
+from pyrusgeom.line_2d import Line2D
+from pyrusgeom.angle_deg import AngleDeg
 from typing import Union
 
 

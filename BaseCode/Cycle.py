@@ -1,7 +1,7 @@
 from __future__ import annotations
 from BaseCode.Player import Player
 from BaseCode.Ball import Ball
-from PyrusGeom.vector_2d import Vector2D
+from pyrusgeom.vector_2d import Vector2D
 import enum
 
 

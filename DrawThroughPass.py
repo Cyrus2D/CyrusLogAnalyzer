@@ -2,9 +2,9 @@ from BaseCode.Cycle import GameMode
 from BaseCode.Game import Game
 import matplotlib.pyplot as plt
 from multiprocessing import Pool
-from PyrusGeom.line_2d import Line2D
-from PyrusGeom.vector_2d import Vector2D
-from PyrusGeom.angle_deg import AngleDeg
+from pyrusgeom.line_2d import Line2D
+from pyrusgeom.vector_2d import Vector2D
+from pyrusgeom.angle_deg import AngleDeg
 import os
 
 
