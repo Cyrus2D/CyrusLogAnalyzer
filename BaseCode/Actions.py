@@ -5,13 +5,13 @@ from pyrusgeom.vector_2d import Vector2D
 class Pass:
     def __init__(self, sender, receiver, start_pos, last_pos, cycle, small_cycle, sender_team, receiver_team, correct):
         self.sender: list[int] = sender
-        self.receiver: list[int] = receiver
+        self.receiver: list[int] = receiver if len(receiver) else [0]
         self.start_pos: Vector2D = start_pos
         self.last_pos: Vector2D = last_pos
         self.cycle: int = cycle
         self.small_cycle: int = small_cycle
         self.sender_team: list[str] = sender_team
-        self.receiver_team: list[str] = receiver_team
+        self.receiver_team: list[str] = receiver_team if len(receiver_team) else ['o']
         self.correct: bool = correct
 
     def reverse(self):
@@ -29,7 +29,7 @@ class Pass:
 
     def __str__(self):
         return f'Pass {self.sender_team}{self.sender} to {self.receiver_team}{self.receiver}, cycle {self.cycle},' \
-               f' pos {self.start_pos} to {self.last_pos}'
+               f' pos {self.start_pos} to {self.last_pos}, success:{self.correct}'
 
     def __repr__(self):
         print(str(self))
