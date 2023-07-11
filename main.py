@@ -43,7 +43,7 @@ for i, file in enumerate(files):
     input_list.append((i, f'{folder}{file}'))
 
 
-input_list += [input_list[0] for _ in range(50)]
+# input_list += [input_list[0] for _ in range(50)]
 pool = Pool(50)
 res = pool.map(create_data, input_list)
 
