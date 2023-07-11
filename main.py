@@ -5,8 +5,9 @@ import os
 import numpy as np
 
 
-def create_data(game_path):
-    g = Game().read_log(game_path)
+def create_data(inps):
+    print(f'#{str(inps[0]).zfill(4)}')
+    g = Game().read_log(inps[1])
     data = []
     for c in g.cycles():
         state_data = []
@@ -35,11 +36,11 @@ folder = "/data1/aref/2d/AutoTest2D/out/t11/log.d/"
 files = os.listdir(folder)
 
 input_list = []
-for file in files:
+for i, file in enumerate(files):
     if not file.endswith('.rcg'):
         continue
     
-    input_list.append((f'{folder}{file}'))
+    input_list.append((i, f'{folder}{file}'))
 
 
 input_list += [input_list[0] for _ in range(50)]
