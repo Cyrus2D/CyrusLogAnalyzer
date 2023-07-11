@@ -44,7 +44,7 @@ for i, file in enumerate(files):
 
 
 input_list += [input_list[0] for _ in range(50)]
-pool = Pool(20)
+pool = Pool(50)
 res = pool.map(create_data, input_list)
 
 all_data = []
