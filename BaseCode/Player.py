@@ -1,6 +1,6 @@
 from __future__ import annotations
-from PyrusGeom.vector_2d import Vector2D
-from PyrusGeom.angle_deg import AngleDeg
+from pyrusgeom.vector_2d import Vector2D
+from pyrusgeom.angle_deg import AngleDeg
 import copy
 
 
@@ -108,3 +108,10 @@ class Player:
 
     def __str__(self) -> str:
         return '(' + self._side + ' ' + str(self._pos) + str(self._vel) + str(self._body) + ')'
+
+    def to_list(self):
+        return [self._pos.x(),
+                self._pos.y(),
+                self._vel.x(),
+                self._vel.y(),
+                self._body.degree()]

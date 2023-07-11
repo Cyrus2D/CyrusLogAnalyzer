@@ -10,7 +10,7 @@ packaging==21.3
 Pillow==9.0.0
 pyGeom2D==0.0.1
 pyparsing==3.0.6
-PyrusGeom==0.0.1
+pyrusgeom==0.1.1
 python-dateutil==2.8.2
 scipy==1.7.3
 six==1.16.0
