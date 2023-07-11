@@ -31,8 +31,7 @@ def create_data(game_path):
 
 
 
-game_path = "Data/20230708005341-CYRUS_4-vs-YuShan2022_0.rcg"
-folder = "Data/"
+folder = "/data1/aref/2d/AutoTest2D/out/t11/log.d/"
 files = os.listdir(folder)
 
 input_list = []
